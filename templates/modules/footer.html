@@ -1,0 +1,267 @@
+<footer th:if="${theme.config.footer.style == 'style_1'}" class="mt-10 bg-gray-100 py-8 px-4 md:px-8 dark:bg-slate-800">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <!-- Mega News -->
+    <div>
+      <h3 class="text-red-500 font-bold flex items-center mb-4">
+        <span class="inline-block w-2 h-6 bg-red-500 mr-2"></span>
+        <span th:text="${theme.spec.displayName}"></span>
+      </h3>
+      <p class="text-sm text-gray-600" th:text="${theme.spec.description}"></p>
+    </div>
+
+    <!-- Categories -->
+    <div th:with="categories = ${categoryFinder.listAsTree()}">
+      <h3 class="text-red-500 font-bold flex items-center mb-4">
+        <span class="w-2 h-6 bg-red-500 mr-2"></span>
+        Categories
+      </h3>
+      <th:block th:replace="~{modules/category-tree :: next(categories=${categories})}" />
+    </div>
+
+    <!-- New Comments -->
+    <div>
+      <h3 class="text-red-500 font-bold flex items-center mb-4">
+        <span class="w-2 h-6 bg-red-500 mr-2"></span>
+        New Comments
+      </h3>
+      <div class="space-y-4">
+        <th:block th:with="posts = ${postFinder.listAll()}">
+          <th:block th:remove="tag" th:with="hasComments = ${false}">
+            <th:block th:each="post, iterStat : ${posts}" th:if="${iterStat.index lt 3}">
+              <div class="w-full post-item">
+                <th:block th:with="comments = ${commentFinder.list({ group: 'content.halo.run', version: 'v1alpha1', kind: 'Post', name: post.metadata.name }, 1, 1)}">
+                  <ul th:if="${not #lists.isEmpty(comments.items)}">
+                    <li th:each="comment, comIterStat : ${comments}" th:if="${comIterStat.index lt 1}" th:with="hasComments = ${hasComments || true}">
+                      <div class="bg-white p-3 rounded-lg shadow-sm">
+                        <p class="font-semibold" th:text="${comment.owner.displayName}">评论者姓名</p>
+                        <p class="text-xs text-gray-500" th:text="${comment.spec.content}">评论内容</p>
+                      </div>
+                    </li>
+                  </ul>
+                </th:block>
+              </div>
+            </th:block>
+<!--            <p th:if="${#lists.isEmpty(posts) || !hasComments}">暂无评论</p>-->
+          </th:block>
+        </th:block>
+      </div>
+    </div>
+
+    <!-- Follow On Instagram -->
+    <div>
+      <h3 class="text-red-500 font-bold flex items-center mb-4">
+        <span class="w-2 h-6 bg-red-500 mr-2"></span>
+        Contributors
+      </h3>
+      <div class="grid grid-cols-3 gap-2">
+<!--        <div th:with="contributors = ${contributorFinder.getContributors(['Administrator'])}">-->
+<!--          <div th:each="contributor : ${contributors}" class="bg-gray-300 aspect-square rounded-lg"-->
+<!--               th:style="'background-image: url(' + ${contributor.avatar} + '); background-size: cover;'">-->
+<!--            <span th:text="${contributor.displayName}" ></span>-->
+<!--          </div>-->
+<!--        </div>-->
+        <div class="bg-gray-300 aspect-square rounded-lg bg-[url('https://yeolde.fun/upload/ourlogo.png')] bg-cover bg-center">
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Newsletter and Social Network -->
+  <div class="max-w-7xl mx-auto mt-8 flex flex-col md:flex-row xl:flex-wrap">
+    <div class="md:w-1/2 xl:w-1/4 xl:pr-4 mb-4 md:mb-0">
+      <h3 class="text-red-500 font-bold flex items-center mb-4">
+        <span class="w-2 h-6 bg-red-500 mr-2"></span>
+        Newsletters
+      </h3>
+      <div class="flex">
+        <input type="email" placeholder="邮件订阅文章，还在开发中噢" class="px-3 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow">
+        <button class="bg-gray-200 px-3 py-2 rounded-r-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-600" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+            <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div class="md:w-1/2 xl:w-1/4 xl:pl-4">
+      <h3 class="text-red-500 font-bold flex items-center mb-4">
+        <span class="w-2 h-6 bg-red-500 mr-2"></span>
+        Social Network
+      </h3>
+      <div class="flex space-x-2">
+        <th:block th:replace="~{modules/footer-social}" />
+      </div>
+    </div>
+    <div class="xl:w-1/2 mt-4 xl:mt-0">
+      
+    </div>
+  </div>
+
+  <!-- Copyright -->
+  <div class="max-w-7xl mx-auto mt-8 flex flex-col md:flex-row justify-between items-center text-sm text-gray-500">
+    <div>Privacy Policy | Terms & Conditions</div>
+    <div>All Copyright (C) 2024 Reserved</div>
+  </div>
+</footer>
+
+<footer th:if="${theme.config.footer.style == 'style_2'}" class="mt-10 bg-white py-8 dark:bg-slate-800">
+  <div class="container mx-auto sm:flex sm:items-center sm:justify-between">
+    <a href="/" class="mb-4 flex items-center justify-center sm:mb-0 sm:justify-start">
+      <img
+        th:if="${not #strings.isEmpty(theme.config.footer.logo)} or ${not #strings.isEmpty(site.logo)}"
+        th:src="${theme.config.footer.logo ?: site.logo}"
+        class="mr-3 size-8"
+        th:alt="${site.title}"
+      />
+      <span
+        class="self-center whitespace-nowrap text-2xl font-semibold dark:text-slate-50"
+        th:text="${theme.config.footer.title ?: site.title}"
+      >
+      </span>
+    </a>
+    <th:block th:if="${not #strings.isEmpty(theme.config.footer.menu)}">
+      <ul
+        th:with="menu = ${menuFinder.getByName(theme.config.footer.menu)}"
+        class="mb-6 flex flex-wrap items-center justify-center text-sm text-gray-500 dark:text-slate-200 sm:mb-0 sm:justify-start"
+      >
+        <li th:each="menuItem : ${menu.menuItems}">
+          <a
+            th:href="@{${menuItem.status.href}}"
+            class="mr-4 transition-all hover:text-gray-900 hover:underline dark:hover:text-white md:mr-6"
+            th:text="${menuItem.status.displayName}"
+          ></a>
+        </li>
+      </ul>
+    </th:block>
+
+    <th:block th:replace="~{modules/footer-social}" />
+  </div>
+  <hr class="my-6 border-gray-100 dark:border-slate-700 sm:mx-auto lg:my-8" />
+  <div class="space-y-1">
+    <span class="container mx-auto block text-center text-sm text-gray-500 dark:text-slate-300">
+      <a
+        href="https://beian.miit.gov.cn/"
+        class="hover:underline"
+        target="_blank"
+        th:href="${theme.config.beian.icp_link}"
+        th:text="${theme.config.beian.icp_text}"
+      ></a>
+    </span>
+    <div
+      th:if="${not #strings.isEmpty(theme.config.beian.gongan_text)}"
+      class="container mx-auto block text-center text-sm text-gray-500 dark:text-slate-300"
+    >
+      <p class="flex items-center justify-center gap-1">
+        <img th:src="@{/assets/images/gongan_beian.png}" class="size-4" alt="gongan_beian" />
+        <a
+          href="https://beian.mps.gov.cn/#/query/webSearch"
+          class="hover:underline"
+          target="_blank"
+          th:href="${theme.config.beian.gongan_link}"
+          th:text="${theme.config.beian.gongan_text}"
+        ></a>
+      </p>
+    </div>
+    <span class="container mx-auto block text-center text-sm text-gray-500 dark:text-slate-300">
+      ©
+      <th:block th:text="${#dates.format(new java.util.Date().getTime(), 'yyyy')}" />
+      <a href="/" class="hover:underline" th:text="${site.title}"></a>. All Rights Reserved. Powered by
+      <a href="https://halo.run" class="hover:underline" target="_blank">Halo</a>.
+    </span>
+    <span class="container mx-auto block text-center text-sm text-gray-500 dark:text-slate-300">
+      <halo:footer />
+    </span>
+  </div>
+</footer>
+
+<footer th:if="${theme.config.footer.style == 'style_3'}" class="mt-10 bg-white py-8 dark:bg-slate-800">
+  <div class="container mx-auto md:flex md:justify-between md:gap-10">
+    <div class="mb-6 max-w-full md:mb-0 md:max-w-md">
+      <a href="/" class="mb-6 flex items-center">
+        <img
+          th:if="${not #strings.isEmpty(theme.config.footer.logo)} or ${not #strings.isEmpty(site.logo)}"
+          th:src="${theme.config.footer.logo ?: site.logo}"
+          class="mr-3 h-8"
+          th:alt="${site.title}"
+        />
+        <span
+          class="self-center whitespace-nowrap text-2xl font-semibold dark:text-slate-50"
+          th:text="${theme.config.footer.title ?: site.title}"
+        ></span>
+      </a>
+      <span
+        th:if="${not #strings.isEmpty(theme.config.footer.slogan)}"
+        class="text-sm font-light text-gray-600 dark:text-slate-200"
+        th:text="${theme.config.footer.slogan}"
+      >
+      </span>
+    </div>
+    <div
+      th:if="${not #lists.isEmpty(theme.config.footer.menus)}"
+      class="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-12"
+    >
+      <th:block th:each="menuName : ${theme.config.footer.menus}">
+        <div th:with="menu = ${menuFinder.getByName(menuName.name)}">
+          <h2
+            class="mb-6 text-sm font-semibold text-gray-900 dark:text-slate-50"
+            th:text="${menu.spec.displayName}"
+          ></h2>
+          <ul th:with="menuItems = ${menu.menuItems}" class="text-sm text-gray-500 dark:text-slate-200">
+            <li th:each="menuItem : ${menuItems}" class="mb-4">
+              <a
+                th:href="@{${menuItem.status.href}}"
+                class="transition-all hover:text-gray-900 hover:underline dark:hover:text-white"
+                th:text="${menuItem.spec.displayName}"
+              ></a>
+            </li>
+          </ul>
+        </div>
+      </th:block>
+    </div>
+  </div>
+  <hr class="my-6 border-gray-200 dark:border-slate-700 sm:mx-auto lg:my-8" />
+  <div class="container mx-auto flex flex-col sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-col space-y-1 text-center sm:text-left">
+      <span class="text-sm text-gray-500 dark:text-slate-300 sm:text-center">
+        ©
+        <th:block th:text="${#dates.format(new java.util.Date().getTime(), 'yyyy')}" />
+        <a href="/" class="hover:underline" th:text="${site.title}"></a>. All Rights Reserved. Powered by
+        <a href="https://halo.run" class="hover:underline" target="_blank">Halo</a>.
+      </span>
+
+      <div class="flex flex-col gap-1 sm:flex-row">
+        <span class="block text-center text-sm text-gray-500 sm:text-left">
+          <a
+            href="https://beian.miit.gov.cn/"
+            class="hover:underline"
+            target="_blank"
+            th:href="${theme.config.beian.icp_link}"
+            th:text="${theme.config.beian.icp_text}"
+          ></a>
+        </span>
+        <div
+          th:if="${not #strings.isEmpty(theme.config.beian.gongan_text)}"
+          class="inline-flex items-center justify-center gap-1 text-sm text-gray-500 sm:justify-start"
+        >
+          <img th:src="@{/assets/images/gongan_beian.png}" class="size-4" alt="gongan_beian" />
+          <a
+            href="https://beian.mps.gov.cn/#/query/webSearch"
+            class="hover:underline"
+            target="_blank"
+            th:href="${theme.config.beian.gongan_link}"
+            th:text="${theme.config.beian.gongan_text}"
+          ></a>
+        </div>
+      </div>
+
+      <p class="text-sm text-gray-500 dark:text-slate-300">
+        <halo:footer />
+      </p>
+    </div>
+
+    <th:block th:replace="~{modules/footer-social}" />
+  </div>
+</footer>
